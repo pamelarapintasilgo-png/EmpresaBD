@@ -1,0 +1,54 @@
+﻿Imports System.Reflection.Metadata.Ecma335
+Imports System.Transactions
+Imports Microsoft.AspNetCore.Mvc
+<Route("api/[controller]")>
+<ApiController>
+
+Public Class ClienteController
+    Inherits ControllerBase
+
+    Private ReadOnly service As ClienteService
+    Public Sub New(service As ClienteService)
+        Me.service = service
+    End Sub
+
+    <HttpGet>
+    Public Function ObtenerTodos() As ActionResult(Of List(Of Cliente))
+        Dim clientes = service.ObtenerTodos()
+        Return Ok(clientes)
+    End Function
+
+    <HttpGet("{id}")>
+    Public Function ObtenerPorId(id As Integer) As ActionResult(Of Cliente)
+        Dim cliente = service.ObtenerPorId(id)
+        If cliente Is Nothing Then
+            Return NotFound()
+        End If
+        Return Ok(cliente)
+    End Function
+
+    <HttpPost>
+    Public Function Crear(cliente As Cliente) As ActionResult(Of Cliente)
+        Dim nuevoCliente = service.Crear(cliente)
+        Return CreatedAtAction(NameOf(ObtenerPorId), New With {.id = nuevoCliente.Id}, nuevoCliente)
+    End Function
+
+    <HttpPut("{id}")>
+    Public Function Modificar(id As Integer, cliente As Cliente) As ActionResult(Of Cliente)
+        Dim actualizado = service.Modificar(id, cliente)
+        If actualizado Is Nothing Then
+            Return NotFound("Cliente no encontrado")
+        End If
+        Return Ok(actualizado)
+    End Function
+
+    <HttpDelete("{id}")>
+    Public Function Eliminar(id As Integer) As ActionResult
+        Dim Eliminado = service.Eliminar(id)
+        If Not Eliminado Then
+            Return NotFound("Cliente no encontrado")
+        End If
+        Return Ok()
+    End Function
+
+End Class

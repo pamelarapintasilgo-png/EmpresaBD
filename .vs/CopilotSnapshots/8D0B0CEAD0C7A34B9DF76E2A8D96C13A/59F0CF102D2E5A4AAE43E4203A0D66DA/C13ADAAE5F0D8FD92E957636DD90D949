@@ -1,0 +1,10 @@
+﻿Imports Microsoft.EntityFrameworkCore
+
+Public Class AppDbContext
+    Inherits DbContext
+    Public Sub New(options As DbContextOptions(Of AppDbContext))
+        MyBase.New(options)
+    End Sub
+    Public Property Cliente As DbSet(Of Clientes)
+
+End Class

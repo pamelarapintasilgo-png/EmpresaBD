@@ -1,0 +1,32 @@
+﻿Imports System.Linq
+
+Public Class ClienteRepository
+    Private ReadOnly contexto As AppDbContext
+    Public Sub New(contexto As AppDbContext)
+        Me.contexto = contexto
+    End Sub
+
+    Public Function ObtenerTodos() As List(Of Cliente)
+        Return contexto.Cliente.ToList()
+    End Function
+
+    Public Function ObtenerPorId(id As Integer) As Cliente
+        Return contexto.Cliente.FirstOrDefault(Function(p) p.Id = id)
+    End Function
+
+    Public Sub Registro(cliente As Cliente)
+        contexto.Cliente.Add(cliente)
+        contexto.SaveChanges()
+    End Sub
+
+    Public Sub Modificar(cliente As Cliente)
+        contexto.Cliente.Update(cliente)
+        contexto.SaveChanges()
+    End Sub
+
+    Public Sub Eliminar(cliente As Cliente)
+        contexto.Cliente.Remove(cliente)
+        contexto.SaveChanges()
+    End Sub
+
+End Class
